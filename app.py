@@ -1,9 +1,13 @@
 import streamlit as st
 import replicate
 import pydantic
+import os
 
-# Oprava pre Pydantic/Python 3.14
+# Oprava pre novú verziu Pythonu
 pydantic.class_validators.class_property = lambda x: x
+
+# VLOŽENIE KĽÚČA PRIAMO DO KÓDU
+os.environ["REPLICATE_API_TOKEN"] = "R8_dHJ5pDZc2NrgeAbXFDPXiJNhMTH7Fhp2Ya0nQ"
 
 st.title("🎬 AI Animátor")
 
@@ -14,8 +18,9 @@ if uploaded_file:
     if st.button("Animovať"):
         with st.spinner("Generujem video..."):
             try:
-                # Replicate si Token nájde sám v Secrets
-                output = replicate.run(
+                # Použitie kľúča z os.environ
+                client = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
+                output = client.run(
                     "lucataco/animate-diff:be2271c589fe4371ba3a94cd2f3a69485f7f34c5685df5d13b41d063737b6c5a",
                     input={"path": uploaded_file}
                 )
