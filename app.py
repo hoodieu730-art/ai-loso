@@ -3,12 +3,7 @@ pydantic.class_validators.class_property = lambda x: x
 import streamlit as st
 import replicate
 import os
-
-# Tvoj API token pre Replicate
-os.environ["REPLICATE_API_TOKEN"] = "R8_UlI9xgBbAGvQqRRMtpXuEmdpGQag3hy0Jtwda"
-
 st.set_page_config(page_title="AI Video Animátor", layout="centered")
-
 st.title("🎬 AI Animátor")
 st.write("Nahraj fotku a AI ju premení na krátke video.")
 
