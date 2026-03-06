@@ -1,40 +1,25 @@
-import pydantic
-pydantic.class_validators.class_property = lambda x: x
 import streamlit as st
 import replicate
-import os
-st.set_page_config(page_title="AI Video Animátor", layout="centered")
+import pydantic
+
+# Oprava pre novú verziu Pythonu
+pydantic.class_validators.class_property = lambda x: x
+
 st.title("🎬 AI Animátor")
-st.write("Nahraj fotku a AI ju premení na krátke video.")
 
-# 1. Nahrávanie obrázka
-uploaded_file = st.file_uploader("Vyber obrázok (jpg, png)", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Nahraj fotku", type=["jpg", "jpeg", "png"])
 
-if uploaded_file is not None:
-    st.image(uploaded_file, caption="Tvoj obrázok", use_container_width=True)
+if uploaded_file:
+    st.image(uploaded_file, caption="Tvoja fotka", use_container_width=True)
     
-    if st.button("Spustiť animáciu ✨"):
-        with st.spinner("Pracujem na tom... Trvá to asi 60 sekúnd."):
+    if st.button("Animovať"):
+        with st.spinner("Generujem video..."):
             try:
-                # Dočasné uloženie obrázka
-                with open("temp_img.jpg", "wb") as f:
-                    f.write(uploaded_file.getbuffer())
-
-                # Volanie AI modelu
-                output = replicate.run(
-                    "stability-ai/stable-video-diffusion:3f045751",
-                    input={
-                        "input_image": open("temp_img.jpg", "rb"),
-                        "video_length": "14_frames_with_svd",
-                        "fps": 6
-                    }
-                )
-
-                video_url = output[0] if isinstance(output, list) else output
+                # Tu si to samo vytiahne kľúč zo Secrets
+                model = replicate.models.get("lucataco/animate-diff")
+                version = model.versions.get("be2271c589fe4371ba3a94cd2f3a69485f7f34c5685df5d13b41d063737b6c5a")
                 
-                # Zobrazenie výsledku
-                st.success("Hotovo!")
-                st.video(video_url)
-
+                output = version.predict(input={"path": uploaded_file})
+                st.video(output)
             except Exception as e:
-                st.error(f"Nastal problém: {e}")
+                st.error(f"Chyba: {e}")
