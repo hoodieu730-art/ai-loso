@@ -1,2 +1,4 @@
 streamlit
-replicate
+replicate==0.25.0
+pydantic<2.0
+
