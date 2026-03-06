@@ -1,3 +1,5 @@
+import pydantic
+pydantic.class_validators.class_property = lambda x: x
 import streamlit as st
 import replicate
 import os
