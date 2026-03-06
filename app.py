@@ -1,9 +1,13 @@
 import streamlit as st
 import replicate
 import pydantic
+import os
 
 # Oprava pre novú verziu Pythonu
 pydantic.class_validators.class_property = lambda x: x
+
+# Nastavenie kľúča priamo v kóde (skúsime to takto)
+os.environ["REPLICATE_API_TOKEN"] = "R8_UlI9xgBbAGvQqRRMtpXuEmdpGQag3hy0Jtwda"
 
 st.title("🎬 AI Animátor")
 
@@ -15,11 +19,12 @@ if uploaded_file:
     if st.button("Animovať"):
         with st.spinner("Generujem video..."):
             try:
-                # Tu si to samo vytiahne kľúč zo Secrets
-                model = replicate.models.get("lucataco/animate-diff")
-                version = model.versions.get("be2271c589fe4371ba3a94cd2f3a69485f7f34c5685df5d13b41d063737b6c5a")
-                
-                output = version.predict(input={"path": uploaded_file})
-                st.video(output)
+                # Spustenie animácie
+                output = replicate.run(
+                    "lucataco/animate-diff:be2271c589fe4371ba3a94cd2f3a69485f7f34c5685df5d13b41d063737b6c5a",
+                    input={"path": uploaded_file}
+                )
+                if output:
+                    st.video(output)
             except Exception as e:
                 st.error(f"Chyba: {e}")
