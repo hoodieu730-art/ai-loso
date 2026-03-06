@@ -7,7 +7,7 @@ import os
 pydantic.class_validators.class_property = lambda x: x
 
 # VLOŽENIE KĽÚČA PRIAMO DO KÓDU
-os.environ["REPLICATE_API_TOKEN"] = "R8_dHJ5pDZc2NrgeAbXFDPXiJNhMTH7Fhp2Ya0nQ"
+os.environ["REPLICATE_API_TOKEN"] = "R8dHJ5pDZc2NrgeAbXFDPXiJNhMTH7Fhp2Ya0nQ"
 
 st.title("🎬 AI Animátor")
 
